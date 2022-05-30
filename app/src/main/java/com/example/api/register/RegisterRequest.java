@@ -1,6 +1,5 @@
-package com.example.api.reqres;
+package com.example.api.register;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class RegisterRequest {

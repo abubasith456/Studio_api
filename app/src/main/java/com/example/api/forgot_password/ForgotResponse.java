@@ -1,9 +1,9 @@
-package com.example.api.reqres;
+package com.example.api.forgot_password;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RegisterResponse {
+public class ForgotResponse {
 
     @SerializedName("status")
     @Expose
@@ -37,5 +37,4 @@ public class RegisterResponse {
     public void setMessage(String message) {
         this.message = message;
     }
-
 }
