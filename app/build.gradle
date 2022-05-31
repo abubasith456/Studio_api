@@ -53,8 +53,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.13.0'
 
     //fancy button
-    implementation 'com.github.medyo:fancybuttons:1.8.2'
-
-    //material precess
-    implementation 'com.pnikosis:materialish-progress:1.5'
+//    implementation 'com.github.medyo:fancybuttons:1.8.2'
+//
+//    //material precess
+//    implementation 'com.pnikosis:materialish-progress:1.5'
 }

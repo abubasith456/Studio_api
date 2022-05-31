@@ -7,29 +7,22 @@ public class LoginResponse {
 
     @SerializedName("status")
     @Expose
-    private int status;
+    private Integer status;
     @SerializedName("connection")
     @Expose
     private String connection;
     @SerializedName("message")
     @Expose
     private String message;
-    @SerializedName("user_id")
+    @SerializedName("userData")
     @Expose
-    private String user_id;
-    @SerializedName("username")
-    @Expose
-    private String username;
-    @SerializedName("email")
-    @Expose
-    private String email;
+    private UserData userData;
 
-
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -40,6 +33,7 @@ public class LoginResponse {
     public void setConnection(String connection) {
         this.connection = connection;
     }
+
     public String getMessage() {
         return message;
     }
@@ -48,27 +42,51 @@ public class LoginResponse {
         this.message = message;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public UserData getUserData() {
+        return userData;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUserData(UserData userData) {
+        this.userData = userData;
     }
 
-    public String getUsername() {
-        return username;
+
+    public class UserData {
+
+        @SerializedName("user_id")
+        @Expose
+        private int userId;
+        @SerializedName("username")
+        @Expose
+        private String username;
+        @SerializedName("email")
+        @Expose
+        private String email;
+
+        public int getUserId() {
+            return userId;
+        }
+
+        public void setUserId(int userId) {
+            this.userId = userId;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

@@ -5,8 +5,9 @@ import androidx.databinding.DataBindingUtil;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,8 @@ import com.example.api.databinding.ActivityMainBinding;
 import com.example.api.login.LoginRequest;
 import com.example.api.login.LoginResponse;
 import com.example.api.profile_info.ProfileResponse;
+import com.example.api.utill.ProcessBar;
+import com.example.api.utill.SharedPref;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,18 +32,34 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     public LoginResponse loginResponse;
+    private SharedPref sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        SharedPref.getInstance().setContext(this);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String username = SharedPref.getInstance().getString("username", "");
+                    if (!username.equals("")) {
+                        startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                        finish();
+                    }
+                } catch (Exception e) {
+                    Log.e("Error", e.getMessage());
+                }
+            }
+        });
 
         binding.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
-
+                    ProcessBar.getInstance().showProcess(getParent(), "Logging in please wait...");
                     String email = binding.editTextMobileNumber.getText().toString();
                     String password = binding.editTextPassword.getText().toString();
 
@@ -53,26 +72,33 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                             if (response.isSuccessful()) {
+                                ProcessBar.getInstance().dismissProcess();
                                 int status = response.body().getStatus();
                                 if (status == 200) {
-                                    loginResponse = response.body();
-                                    showCustomDialog(response.body().getMessage(), true);
+                                    //Store the user info
+                                    SharedPref.getInstance().putInt("userId", response.body().getUserData().getUserId());
+                                    SharedPref.getInstance().putString("username", response.body().getUserData().getUsername());
+                                    SharedPref.getInstance().putString("email", response.body().getUserData().getEmail());
+                                    showCustomDialog(response.body().getMessage(), true, response.body().getUserData());
                                 } else if (status == 400) {
-                                    showCustomDialog(response.body().getMessage(), false);
+                                    showCustomDialog(response.body().getMessage(), false, response.body().getUserData());
                                 } else {
-                                    showCustomDialog("Something went wrong", false);
+                                    showCustomDialog("Something went wrong", false, response.body().getUserData());
                                 }
                             }
                         }
 
                         @Override
                         public void onFailure(Call<LoginResponse> call, Throwable t) {
+                            ProcessBar.getInstance().dismissProcess();
                             Log.e("Value", "" + t.getMessage());
-                            showCustomDialog("Something went wrong. Please try again later!", false);
+                            showCustomDialog("Something went wrong. Please try again later!", false, null);
                         }
                     });
 
                 } catch (Exception e) {
+                    ProcessBar.getInstance().dismissProcess();
+                    Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("Error", e.getMessage());
                 }
             }
@@ -80,9 +106,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected void showCustomDialog(String message, boolean isSuccess) {
+    protected void showCustomDialog(String message, boolean isSuccess, LoginResponse.UserData userData) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.custom_dialog);
+        dialog.setCancelable(true);
         dialog.setTitle("");
 
         TextView text = dialog.findViewById(R.id.textViewMessage);
@@ -102,9 +129,9 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     if (isSuccess) {
                         Intent dashboardIntent = new Intent(getApplicationContext(), DashboardActivity.class);
-                        dashboardIntent.putExtra("userId",loginResponse.getUser_id());
-                        dashboardIntent.putExtra("email", loginResponse.getEmail());
-                        dashboardIntent.putExtra("username",loginResponse.getUsername());
+                        dashboardIntent.putExtra("userId", userData.getUserId());
+                        dashboardIntent.putExtra("email", userData.getEmail());
+                        dashboardIntent.putExtra("username", userData.getUsername());
                         startActivity(dashboardIntent);
 //                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
 //                        finish();

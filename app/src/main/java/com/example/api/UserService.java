@@ -1,6 +1,8 @@
 package com.example.api;
 import com.example.api.login.LoginRequest;
 import com.example.api.login.LoginResponse;
+import com.example.api.logout.LogoutRequest;
+import com.example.api.logout.LogoutResponse;
 import com.example.api.profile_info.ProfileResponse;
 import com.example.api.register.RegisterRequest;
 import com.example.api.register.RegisterResponse;
@@ -21,6 +23,9 @@ public interface UserService {
 
     @GET("/profile")
     Call<ProfileResponse> profile();
+
+    @POST("/logout")
+    Call<LogoutResponse> logout(@Body LogoutRequest logoutRequest);
 
 
 }
