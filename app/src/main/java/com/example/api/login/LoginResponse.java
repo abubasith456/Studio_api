@@ -62,6 +62,12 @@ public class LoginResponse {
         @SerializedName("email")
         @Expose
         private String email;
+        @SerializedName("dateOfBirth")
+        @Expose
+        private String dateOfBirth;
+        @SerializedName("mobileNumber")
+        @Expose
+        private String mobileNumber;
 
         public int getUserId() {
             return userId;
@@ -87,6 +93,21 @@ public class LoginResponse {
             this.email = email;
         }
 
+        public String getDateOfBirth() {
+            return dateOfBirth;
+        }
+
+        public void setDateOfBirth(String dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+        }
+
+        public String getMobileNumber() {
+            return mobileNumber;
+        }
+
+        public void setMobileNumber(String mobileNumber) {
+            this.mobileNumber = mobileNumber;
+        }
     }
 
 }

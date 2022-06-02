@@ -1,12 +1,12 @@
-package com.example.api.logout;
+package com.example.api.update_profile;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LogoutResponse {
+public class UpdateProfileResponse {
     @SerializedName("status")
     @Expose
-    private int status;
+    private Integer status;
     @SerializedName("connection")
     @Expose
     private String connection;
@@ -14,11 +14,11 @@ public class LogoutResponse {
     @Expose
     private String message;
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

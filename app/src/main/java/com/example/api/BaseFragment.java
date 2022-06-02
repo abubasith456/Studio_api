@@ -1,40 +1,40 @@
 package com.example.api;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Spanned;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseFragment extends Fragment {
 
-    private Context context;
+    private Activity activity;
     MaterialDialog progressDialog;
     MaterialDialog confirmDialog;
     MaterialDialog alertDialog;
     MaterialDialog errorDialog;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this;
-    }
 
+        activity = getActivity();
+    }
     public void onStartProgress(final String message) {
         onStartProgress(message, getResources().getColor(R.color.black));
     }
 
     public void onStartProgress(final String message, int resId) {
 
-        progressDialog = new MaterialDialog.Builder(context)
+        progressDialog = new MaterialDialog.Builder(activity)
                 .cancelable(false)
                 .canceledOnTouchOutside(false)
                 .content(message)
@@ -54,11 +54,11 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void onAlertMessage(final String title, final String message, final MaterialDialog.SingleButtonCallback callback) {
-        runOnUiThread(new Runnable() {
+       getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
 //                closeOpenDialogs();
-                alertDialog = new MaterialDialog.Builder(context)
+                alertDialog = new MaterialDialog.Builder(activity)
                         .title(title)
                         .cancelable(false)
                         .canceledOnTouchOutside(false)
@@ -80,7 +80,7 @@ public class BaseActivity extends AppCompatActivity {
         try {
 //            closeOpenDialogs();
             if (confirmDialog == null) {
-                confirmDialog = new MaterialDialog.Builder(context)
+                confirmDialog = new MaterialDialog.Builder(activity)
                         .cancelable(false)
                         .canceledOnTouchOutside(false)
                         .title(title)
@@ -132,9 +132,9 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void hideSoftKeyboard() {
-        if (getCurrentFocus() != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        if (getActivity().getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         }
     }
 }
